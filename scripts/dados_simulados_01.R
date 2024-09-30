@@ -5,7 +5,6 @@
 
 library(here)      # Permite utilizar caminhos relativos no projeto
 library(tidyverse) # Metapacote que inclui dplyr, ggplot2, etc.
-library(readxl)    # Para importar planilhas Excel
 
 
 # dados simulados ---------------------------------------------------------

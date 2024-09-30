@@ -1,0 +1,362 @@
+---
+title: "Linguagem R e Sistema Quarto"
+subtitle: "Métodos Quantitativos Aplicados à Administração"
+author: Seu Nome
+lang: pt
+format:
+  html:
+    theme: cosmos
+    toc: true
+    number-sections: true
+    self-contained: true
+crossref:
+  fig-prefix: 'Fig.'
+  tbl-prefix: 'Tab.'
+execute:
+  echo: true
+  message: false
+  warning: false
+editor: source
+---
+
+
+<style type="text/css">
+  body{
+  font-size: 12pt; 
+  text-align: justify
+      }
+</style>
+
+
+```{r}
+#| label: setup 
+
+# configura exibicao de numeros
+options(scipen = 9999)
+
+# pacotes utilizados
+library(here)         # Permite utilizar caminhos relativos no projeto
+library(tidyverse)    # Metapacote que inclui dplyr, readr, ggplot2, etc.
+```
+
+
+# Nesta Aula 
+
+::: {.callout-note}
+## Tópicos
+
+- Revisão da Linguagem R
+
+:::
+
+
+
+# O que é a Linguagem R?
+
+- R é uma linguagem de programação para análise de dados, estatística e 
+visualização.
+
+- Utilizada em diversas áreas, como Economia, Finanças, Marketing e 
+Administração.
+
+- Possui uma grande comunidade e muitos pacotes prontos para resolver 
+problemas de negócios.
+
+
+
+## R como uma Calculadora
+
+- R pode ser usado para operações matemáticas simples.
+
+```{r}
+2 + 3 # adicão
+```
+
+```{r}
+3 - 4 # subtração
+```
+
+```{r}
+7 * 4 # Multiplicação
+```
+
+```{r}
+8/4 # Divisão
+```
+
+```{r}
+2^3 # Potenciação
+```
+
+```{r}
+sqrt(16) # raíz quadrada
+```
+
+```{r}
+exp(10) # exponenciação
+```
+
+```{r}
+log(100) # logaritmo natural
+```
+
+```{r}
+log10(100) # logaritmo base 10
+```
+
+```{r}
+round(3.1415, digits = 2) # arredondamento
+```
+
+
+
+## Precedência de Operações Aritméticas
+
+- A linguagem R segue regras específicas de precedência de operações 
+aritméticas para determinar a ordem em que as operações são avaliadas. 
+
+- A precedência refere-se à prioridade que cada operador tem em 
+relação aos outros.
+
+A seguir são descritas as principais regras de precedência na linguagem R, da mais alta para a mais baixa:
+
+1. **Parênteses**:
+
+- As operações dentro de parênteses têm a mais alta prioridade.
+
+- Quando parênteses são usados, as operações dentro deles são avaliadas primeiro.
+
+2. **Potenciação**:
+
+- A potenciação tem a segunda maior prioridade.
+
+- Por exemplo, 2^3 é avaliado antes de outras operações.
+
+3. **Multiplicação e Divisão**:
+
+- Multiplicação e divisão têm a mesma prioridade e são avaliadas da 
+esquerda para a direita. 
+
+Veja dois exemplos:
+
+```{r}
+2*3/4 
+```
+
+```{r}
+2/3*4
+```
+
+
+4. **Adição e Subtração**:
+
+- Adição e subtração têm a menor prioridade entre as operações aritméticas e também são avaliadas da esquerda para a direita.
+
+
+
+## R como uma Calculadora  
+
+- Usando variáveis:
+
+```{r}
+x <- 10
+y <- 5
+z <- x + y
+z
+```
+
+
+## Trabalhando com Dados
+
+Criando vetores manualmente:
+
+```{r}
+lucro <- c(100, 200, 150, 300)
+lucro
+```
+
+Calculando estatísticas de vendas como um **vetor**:
+
+```{r}
+mean(lucro) # média
+```
+
+```{r}
+median(lucro) # mediana
+```
+
+```{r}
+quantile(lucro) # quantis
+```
+
+  
+- Sumário estatístico:
+
+```{r}
+summary(lucro)
+```
+
+
+Criando data frames manualmente:
+
+```{r}
+# Nome dos funcionários
+funcionarios <- factor(c("Ana", "Bruno", "Carlos", "Daniela", "Eduardo"))
+
+# Departamentos em que trabalham
+departamento <- factor(c("Financeiro", "Recursos Humanos", "Marketing",  
+                         "Financeiro", "Operações"))
+
+# Salários mensais
+salario <- c(4500, 3800, 5000, 4700, 5200)
+
+# Data de contratação
+data_contratacao <- as.Date(c("2020-01-15", "2019-03-10", "2021-07-22",  
+                              "2018-11-05", "2022-02-14"))
+
+# Criando o data frame
+df_funcionarios <- data.frame(
+  funcionario = funcionarios,
+  departamento = departamento,
+  salario = salario,
+  data_contratacao = data_contratacao
+)
+
+# Visualizando o data frame
+df_funcionarios
+```
+
+
+Calcuando estatísticas de todas as variáveis de uma data frame:
+
+```{r}
+summary(df_funcionarios)
+```
+
+
+
+## Pacote `here`
+
+- Exemplo de como criar um caminho relativo para acessar arquivos e 
+e de como importar um arquivo `csv`.
+
+```{r}
+# cria o caminho relativo para o arquvio vendas.csv
+path_csv <- here::here("dados/brutos/vendas.csv")
+
+# importa o arquivo usando o caminho relativo e a funcao 
+# read_csv do pacote readr
+dados_vendas <- readr::read_csv(path_csv)
+
+# visao geral da estrutura dos dados
+dplyr::glimpse(dados_vendas)
+```
+
+
+## Dados Simulados
+
+Cada linha no arquivo `vendas.csv` corresponde a uma transação de 
+venda de um determinado produto, realizada em uma data específica, em um 
+município específico, por um representante de vendas específico.
+
+1. **`data`**: Representa a data em que a venda ocorreu. Essas datas 
+foram amostradas aleatoriamente de um conjunto de todas as datas entre 1º de 
+janeiro de 2023 e 31 de dezembro de 2023. Isso significa que, em algumas 
+datas, pode haver várias transações e em outras, nenhuma.
+
+2. **`municipio`**: Indica o município onde a venda foi realizada. 
+Os municípios possíveis são "Formiga", "Arcos", "Pimenta" e "Piumhi". 
+
+3. **`representante`**: representante de vendas responsável 
+pela transação. Existem 20 representantes, identificados como "Representante 1", "Representante 2", até "Representante 20".
+
+4. **`produto`**: produto vendido na transação. Os produtos possíveis são 
+"Produto A", "Produto B" e "Produto C".
+
+5. **`unidades`**: Informa a quantidade de unidades do produto 
+vendidas na transação. 
+
+6. **`preco_unitario`**: Mostra o preço unitário do produto vendido. 
+
+7. **`receita_bruta`**: Representa a receita bruta gerada pela transação, que é calculada multiplicando o número de unidades vendidas (`unidades`) pelo preço unitário do produto (`preco_unitario`).
+
+Portanto, **cada linha do data frame** representa uma **transação de venda** 
+ocorrida em uma data específica, de um produto específico, vendida por 
+um representante em um município. Os valores de unidades vendidas, 
+preço unitário e a receita gerada são simulados aleatoriamente para cada 
+transação.
+
+
+
+## Manipulação de Dados com `dplyr`
+
+Selecionando variáveis (ou colunas):
+
+```{r}
+# seleciona as variaveis/colunas municipio e receita bruta
+dplyr::select(dados_vendas, municipio, receita_bruta)
+```
+
+
+Filtrando linhas:
+
+```{r}
+# filtra as observacoes (vendas) que produziram uma 
+# receita bruta superior a 100
+dplyr::filter(dados_vendas, receita_bruta > 2000)
+```
+
+
+Agrupando calculos por uma variável categórica:
+
+```{r}
+dados_vendas %>% 
+  group_by(municipio) %>% 
+  summarise(receita_total = sum(receita_bruta)) 
+```
+
+
+
+## Visualização de Dados com `ggplot2`
+
+Criando gráficos de barras:
+
+```{r}
+ggplot(dados_vendas, aes(x = municipio, y = receita_bruta)) +
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+Gráfico de Linha:
+
+```{r}
+#| output-location: slide
+
+# Agrupar por mês
+receita_mensal <- dados_vendas %>%
+  mutate(mes = floor_date(data, "month")) %>%
+  group_by(mes) %>%
+  summarise(receita_total = sum(receita_bruta),
+            unidades_mensais = sum(unidades))
+
+# Plotar Receita Mensal
+ggplot(receita_mensal, aes(x = mes, y = receita_total)) +
+  geom_point() + 
+  geom_line(color = "steelblue", size = 1) +
+  labs(title = "Receita Mensal", x = "Mês", y = "Receita (R$)") + 
+  ylim(0, 400000) + 
+  theme_minimal()
+```
+
+
+
+# Conclusão
+
+- Revisamos alguns dos principais conceitos da linguagem R: 
+operações matemáticas, vetores, importação e manipulação de dados, 
+visualização de dados.
+
+- A linguagem R é uma ferramenta poderosa para análise de dados aplicados a negócios.
+
+- **Próximos passos**: Praticar e explorar mais funções em R.
+
